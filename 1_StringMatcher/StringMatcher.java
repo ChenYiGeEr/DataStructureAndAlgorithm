@@ -5,7 +5,7 @@
 public class StringMatcher {
 
     public static void main(String[] args) {
-        String string = "l'm lim, not lee, lim!",
+        String string = "i'm lim, not lee, lim!",
                targetString = "lim",
                soutPrefix = "[" + targetString + "]在[" + string + "]中第一次出现的下标是：";
         // 使用一个byte一个byte匹配的算法
@@ -60,16 +60,15 @@ public class StringMatcher {
             if(byte1StartIndex == 0) { firstTimeMatchIndex = bytesStartIndex;}
             if(byte1StartIndex == bytes1.length - 1){
                 methodEnd(start);
-                return bytesStartIndex - byte1StartIndex;
+                // return bytesStartIndex - byte1StartIndex;
+                return bytesStartIndex + ~byte1StartIndex + 1;
             }else if (bytesStartIndex == bytes.length - 1){
                 methodEnd(start);
                 return result;
             }
             return recursion(bytes, ++bytesStartIndex, bytes1, ++byte1StartIndex , firstTimeMatchIndex, start);
-        }else if(firstTimeMatchIndex != 0){
-            return recursion(bytes, ++firstTimeMatchIndex, bytes1, 0 , firstTimeMatchIndex, start);
-        }else{
-            return recursion(bytes, ++bytesStartIndex, bytes1, 0 , firstTimeMatchIndex, start);
+        }else {
+            return recursion(bytes, (firstTimeMatchIndex != 0 ? ++firstTimeMatchIndex : ++bytesStartIndex), bytes1, 0 , firstTimeMatchIndex, start);
         }
     }
 
