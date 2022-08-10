@@ -26,19 +26,19 @@ public class StringMatcher {
      * @exception
      */
     private static int getFirstMatchIndex1(String string, String targrtString){
-        long start = getCurrentTimeMillis();
+        long start = CommonMethods.methodStart();
         int result = -1;
         if(string == null || targrtString == null){ return result; }
         byte[] bytes = string.getBytes(), bytes1 = targrtString.getBytes();
         if(bytes1.length > bytes.length){
-            methodEnd(start);
+            CommonMethods.methodEnd(start);
             return result;
         }
         return recursion(bytes, 0, bytes1, 0, 0, start);
     }
 
     /**
-     * 递归实现下标计算
+     * （暴力匹配）递归实现第一次出现的下标计算
      *
      * @method recursion
      * @author lim
@@ -47,8 +47,8 @@ public class StringMatcher {
      * @param bytesStartIndex   bytes开始遍历的下标
      * @param bytes1            targrtString转化成的数组
      * @param byte1StartIndex   bytes1开始遍历的下标
+     * @param firstTimeMatchIndex 第一次匹配的下标，用于回滚匹配使用
      * @param start             开始时间,用于输出方法执行耗时
-     * @param firstTimeMatchIndex
      * @return int
      * @exception
      */
@@ -59,11 +59,11 @@ public class StringMatcher {
         if(bytes1[byte1StartIndex] == bytes[bytesStartIndex]){
             if(byte1StartIndex == 0) { firstTimeMatchIndex = bytesStartIndex;}
             if(byte1StartIndex == bytes1.length - 1){
-                methodEnd(start);
+                CommonMethods.methodEnd(start);
                 // return bytesStartIndex - byte1StartIndex;
                 return bytesStartIndex + ~byte1StartIndex + 1;
             }else if (bytesStartIndex == bytes.length - 1){
-                methodEnd(start);
+                CommonMethods.methodEnd(start);
                 return result;
             }
             return recursion(bytes, ++bytesStartIndex, bytes1, ++byte1StartIndex , firstTimeMatchIndex, start);
@@ -73,20 +73,11 @@ public class StringMatcher {
     }
 
     private static int getFirstMatchIndex2(String string, String targrtString){
-        long start = getCurrentTimeMillis();
+        long start = CommonMethods.methodStart();
         int result = string.indexOf(targrtString);
-        methodEnd(start);
+        CommonMethods.methodEnd(start);
         return result;
     }
 
-    // 公共方法
-    private static long getCurrentTimeMillis(){
-        return System.currentTimeMillis();
-    }
 
-    // 公共方法
-    private static void methodEnd(long start){
-        long end = System.currentTimeMillis();
-        System.out.println("用时" + (end - start) + "毫秒！");
-    }
 }
