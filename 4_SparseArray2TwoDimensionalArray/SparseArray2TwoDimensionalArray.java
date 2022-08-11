@@ -1,10 +1,12 @@
 
+import sun.misc.BASE64Decoder;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * 二维数组和稀疏数组相互转换
+ * 二维数组和稀疏数组的相互转换
  *
  */
 public class SparseArray2TwoDimensionalArray {
@@ -22,11 +24,12 @@ public class SparseArray2TwoDimensionalArray {
      * @exception
      */
     public static void main(String[] args) {
+        // 这种初始化二维数组方式更为直观
         int[][] param = new int[][]{
                 new int[]{-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                new int[]{0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                new int[]{0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0},
-                new int[]{0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0},
+                new int[]{0, 1, 0, 0, 0, 11, 0, 0, 0, 0, 0},
+                new int[]{0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0},
+                new int[]{0, 0, 0, 3, 0, 15, 0, 0, 0, 0, 0},
                 new int[]{0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0},
                 new int[]{0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0},
                 new int[]{0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0},
@@ -56,15 +59,15 @@ public class SparseArray2TwoDimensionalArray {
      */
     private static int[][] twoDimensionalArray2SparseArray(int[][] twoDimensionalArray){
         // 初始化elementAndShowTimes，key为二维数组中出现的元素，value为key出现的坐标，value[0]为行 value[1]为列
-        Map<Integer, Integer[]> elementAndShowTimes = new HashMap<Integer, Integer[]>();
+        Map<Integer[], Integer> elementAndShowTimes = new HashMap<Integer[], Integer>();
         // 遍历二维数组，补充稀疏数组信息
         for (int i = 0; i < twoDimensionalArray.length; i++) {
             for (int j = 0; j < twoDimensionalArray[i].length; j++) {
-                elementAndShowTimes.put(twoDimensionalArray[i][j], new Integer[]{i,j});
+                if(twoDimensionalArray[i][j] != BASE_VALUE){
+                    elementAndShowTimes.put(new Integer[]{i,j}, twoDimensionalArray[i][j]);
+                }
             }
         }
-        // 移除基数及其坐标
-        elementAndShowTimes.remove(BASE_VALUE);
         int[][] sparseArray = new int[elementAndShowTimes.size() + 1][3];
         // 稀疏数组[0][0] 位置是二维数组的行数
         sparseArray[0][0] = twoDimensionalArray.length;
@@ -72,12 +75,12 @@ public class SparseArray2TwoDimensionalArray {
         sparseArray[0][1] = twoDimensionalArray[0].length;
         // 稀疏数组[0][2] 位置是二维数组中的元素去重后的元素数，
         sparseArray[0][2] = elementAndShowTimes.size();
-        Set<Integer> keys = elementAndShowTimes.keySet();
+        Set<Integer[]> keys = elementAndShowTimes.keySet();
         int index = 1;
-        for (Integer key : keys) {
-            sparseArray[index][0] = elementAndShowTimes.get(key)[0];
-            sparseArray[index][1] = elementAndShowTimes.get(key)[1];
-            sparseArray[index][2] = key;
+        for (Integer[] key : keys) {
+            sparseArray[index][0] = key[0];
+            sparseArray[index][1] = key[1];
+            sparseArray[index][2] = elementAndShowTimes.get(key);
             index ++;
         }
         return sparseArray;
@@ -116,7 +119,7 @@ public class SparseArray2TwoDimensionalArray {
                 if(j == array[i].length - 1){
                     System.out.println(array[i][j]);
                 }else{
-                    System.out.print(array[i][j] + "\t");
+                    System.out.printf("%d\t", array[i][j]);
                 }
             }
         }
