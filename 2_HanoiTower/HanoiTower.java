@@ -7,7 +7,7 @@
 public class HanoiTower {
 
     public static void main(String[] args) {
-        int n = 10;
+        int n = 3;
         System.out.println(n + "层汉诺塔需要移动" + getMoveTimes(n)  + "次");
     }
 
